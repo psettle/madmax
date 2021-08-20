@@ -1,3 +1,6 @@
 [submodule "modules/cg-cpp-bundler"]
 	path = modules/cg-cpp-bundler
 	url = https://github.com/psettle/cg-cpp-bundler.git
+[submodule "modules/cminify"]
+	path = modules/cminify
+	url = https://github.com/Scylardor/cminify.git
