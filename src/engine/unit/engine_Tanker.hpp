@@ -3,7 +3,9 @@
  */
 #pragma once
 
-#include "Vehicle.hpp"
+#include "engine_Vehicle.hpp"
+
+namespace engine {
 
 class Tanker : public Vehicle {
  public:
@@ -15,3 +17,5 @@ class Tanker : public Vehicle {
   int water_;
   int capacity_;
 };
+
+}  // namespace engine

@@ -7,6 +7,7 @@
 #include "Vector.hpp"
 
 namespace engine {
+
 struct Move {
   enum class Type { kWait, kSkill, kMove };
 
@@ -18,5 +19,16 @@ struct Move {
   Vector target;
 };
 
-typedef std::vector<Move> MoveSequence;
+struct PlayerTurn {
+  Move reaper;
+  Move destroyer;
+  Move doof;
+};
+
+struct TotalTurn {
+  PlayerTurn player[3];
+};
+
+typedef std::vector<TotalTurn> Moves;
+
 }  // namespace engine

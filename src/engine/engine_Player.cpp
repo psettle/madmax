@@ -1,7 +1,9 @@
 /**
  * Current state per player
  */
-#include "Player.hpp"
+#include "engine_Player.hpp"
+
+namespace engine {
 
 void Player::AddVehicle(Vehicle const& vehicle) {
   vehicles_.push_back(vehicle);
@@ -19,3 +21,5 @@ void Player::AddVehicle(Vehicle const& vehicle) {
       break;
   }
 }
+
+}  // namespace engine

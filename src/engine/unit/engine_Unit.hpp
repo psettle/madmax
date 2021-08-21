@@ -3,8 +3,10 @@
  */
 #pragma once
 
-#include "UnitType.hpp"
 #include "Vector.hpp"
+#include "engine_UnitType.hpp"
+
+namespace engine {
 
 class Unit {
  public:
@@ -19,9 +21,13 @@ class Unit {
   Vector const& position() const { return position_; }
   double radius() const { return radius_; }
 
+  virtual void RoundOff() { position_.Round(); }
+
  private:
   Id id_;
   UnitType type_;
   Vector position_;
   double radius_;
 };
+
+}  // namespace engine

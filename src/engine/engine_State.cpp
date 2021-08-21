@@ -1,20 +1,22 @@
 /**
  * Description of current gamestate
  */
-#include "GameState.hpp"
+#include "engine_State.hpp"
 #include <iostream>
 
-void GameState::AddVehicle(Vehicle const& vehicle, Player::Id owner) {
+namespace engine {
+
+void State::AddVehicle(Vehicle const& vehicle, Player::Id owner) {
   players_[owner].AddVehicle(vehicle);
 }
 
-void GameState::AddWreck(Unit const& unit) { wrecks_.push_back(unit); }
+void State::AddWreck(Unit const& unit) { wrecks_.push_back(unit); }
 
-void GameState::AddSkill(Skill const& skill) { skills_.push_back(skill); }
+void State::AddSkill(Skill const& skill) { skills_.push_back(skill); }
 
-void GameState::AddTanker(Tanker const& tanker) { tankers_.push_back(tanker); }
+void State::AddTanker(Tanker const& tanker) { tankers_.push_back(tanker); }
 
-GameState::GameState() {
+State::State() {
   int score_0, score_1, score_2, rage_0, rage_1, rage_2;
   std::cin >> score_0 >> score_1 >> score_2 >> rage_0 >> rage_1 >> rage_2;
 
@@ -53,3 +55,5 @@ GameState::GameState() {
     }
   }
 }
+
+}  // namespace engine

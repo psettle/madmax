@@ -5,13 +5,13 @@
 #include <math.h>
 #include <iostream>
 #include <string>
-#include "GameState.hpp"
+#include "engine_State.hpp"
 
-std::string get_reaper_move(GameState const& state) {
-  auto const& reaper = state.GetPlayer(0).reaper();
+std::string get_reaper_move(engine::State const& state) {
+  auto const& reaper = state.players()[0].reaper();
 
   double closest_wreck_distance = INFINITY;
-  Unit const* closest_wreck = nullptr;
+  engine::Unit const* closest_wreck = nullptr;
 
   for (auto const& wreck : state.wrecks()) {
     double distance = Vector::Distance(reaper.position(), wreck.position());

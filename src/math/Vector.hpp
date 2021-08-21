@@ -18,6 +18,16 @@ class Vector {
     return std::sqrt(dx * dx + dy * dy);
   }
 
+  static void Round(double& x) {
+    int s = x < 0 ? -1 : 1;
+    x = s * std::floor(s * x);
+  }
+
+  void Round() {
+    Round(x_);
+    Round(y_);
+  }
+
  private:
   double x_;
   double y_;

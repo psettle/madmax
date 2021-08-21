@@ -1,7 +1,9 @@
 /**
  * Possible unit types
  */
-#include "UnitType.hpp"
+#include "engine_UnitType.hpp"
+
+namespace engine {
 
 UnitType ParseUnitType(int type) {
   switch (type) {
@@ -23,3 +25,5 @@ UnitType ParseUnitType(int type) {
       return UnitType::kUnknown;
   }
 }
+
+}  // namespace engine

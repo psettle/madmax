@@ -10,22 +10,24 @@ INCLUDE=
 INCLUDE += src
 INCLUDE += src/util
 INCLUDE += src/math
-INCLUDE += src/units
-INCLUDE += src/gamestate
 INCLUDE += src/bot
 INCLUDE += src/engine
+INCLUDE += src/engine/unit
 
 #source includes
 SOURCES += src/main.cpp
-SOURCES += src/units/UnitType.cpp
-SOURCES += src/gamestate/GameState.cpp
-SOURCES += src/gamestate/Player.cpp
+
+SOURCES += src/engine/engine_State.cpp
+SOURCES += src/engine/engine_Player.cpp
 SOURCES += src/engine/engine_Game.cpp
+SOURCES += src/engine/unit/engine_UnitType.cpp
+SOURCES += src/engine/unit/engine_Vehicle.cpp
 
 #final results
 EXECUTABLE=out/madmax.exe
 BUNDLE=out/madmax.cpp
 MINI_BUNDLE=out/minimadmax.cpp
+EXE_BUNDLE=out/minimadmax.exe
 
 
 # C/C++ toolchain setup
@@ -53,7 +55,7 @@ DEPENDENCIES=$(OBJECTS:.o=.d)										# Header dependency listings
 
 #targets
 .PHONY: all
-all: $(EXECUTABLE) $(MINI_BUNDLE)
+all: $(EXECUTABLE) $(MINI_BUNDLE) $(EXE_BUNDLE)
 
 
 $(EXECUTABLE): $(OBJECTS)
@@ -71,6 +73,10 @@ $(BUNDLE): $(EXECUTABLE)
 
 $(MINI_BUNDLE): $(BUNDLE)
 	@$(PYTHON) $(MINIFIER) $(BUNDLE) > $(MINI_BUNDLE)
+	@echo $@
+
+$(EXE_BUNDLE) : $(MINI_BUNDLE)
+	@$(CC) $(LDFLAGS) $(MINI_BUNDLE) -o $@
 	@echo $@
 
 .PHONY: clean
