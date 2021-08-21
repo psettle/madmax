@@ -8,15 +8,25 @@
 
 namespace engine {
 
-struct Move {
+class Move {
+ public:
   enum class Type { kWait, kSkill, kMove };
 
-  Move(Type t) : Move(t, 0, 0) {}
-  Move(Type t, double x, double y) : Move(t, Vector(x, y)) {}
-  Move(Type t, Vector const& p) : type(t), target(p) {}
+  Move() : Move(Type::kWait) {}
+  Move(Vector const& target) : Move(Type::kSkill, target) {}
+  Move(Vector const& target, int power) : Move(Type::kMove, target, power) {}
 
-  Type type;
-  Vector target;
+  Type type() const { return type_; }
+  Vector const& target() const { return target_; }
+  int power() const { return power_; }
+
+ private:
+  Move(Type type, Vector const& target = Vector(0, 0), int power = 0)
+      : type_(type), target_(target), power_(power) {}
+
+  Type type_;
+  Vector target_;
+  int power_;
 };
 
 struct PlayerTurn {

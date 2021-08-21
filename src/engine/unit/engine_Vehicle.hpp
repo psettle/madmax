@@ -10,8 +10,15 @@ namespace engine {
 class Vehicle : public Unit {
  public:
   Vehicle(Id id, UnitType type, double x, double y, double radius, double dx, double dy,
-          double mass)
-      : Unit(id, type, x, y, radius), velocity_(dx, dy), mass_(mass) {}
+          double mass, double friction)
+      : Unit(id, type, x, y, radius),
+        velocity_(dx, dy),
+        mass_(mass),
+        oil_(false),
+        friction_(friction) {}
+
+  double speed() const { return Vector::Distance(Vector(0, 0), position()); }
+  bool oil() const { return oil_; }
 
   void AddMass(double mass) { mass_ += mass; }
   void UnwindMass(double mass) {
@@ -22,16 +29,28 @@ class Vehicle : public Unit {
 
   void Thrust(Vector const& direction, double power);
 
-  double speed() const { return Vector::Distance(Vector(0, 0), position()); }
-
   void RoundOff() override {
     Unit::RoundOff();
     velocity_.Round();
   }
 
+  void SetOil(bool status) { oil_ = status; }
+
+  void ApplyFriction() {
+    if (oil()) {
+      return;
+    }
+
+    velocity_ *= (1.0 - friction_);
+  }
+
+  virtual double mass() const { return mass_; }
+
  private:
   Vector velocity_;
   double mass_;
+  bool oil_;
+  double friction_;
 };
 
 }  // namespace engine

@@ -28,6 +28,12 @@ class Vector {
     Round(y_);
   }
 
+  Vector const& operator*=(double scalar) {
+    x_ *= scalar;
+    y_ *= scalar;
+    return *this;
+  }
+
  private:
   double x_;
   double y_;

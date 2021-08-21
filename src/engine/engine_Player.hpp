@@ -34,6 +34,8 @@ class Player {
   Vehicle& destroyer() { return *destroyer_; }
   Vehicle& doof() { return *doof_; }
 
+  void AddPoint() { score_++; }
+
  private:
   Id const id_;
   int score_;

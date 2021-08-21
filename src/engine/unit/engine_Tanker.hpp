@@ -9,9 +9,14 @@ namespace engine {
 
 class Tanker : public Vehicle {
  public:
-  Tanker(Id id, UnitType type, double x, double y, double radius, double dx, double dy, double mass,
-         int water, int capacity)
-      : Vehicle(id, type, x, y, radius, dx, dy, mass), water_(water), capacity_(capacity) {}
+  Tanker(Id id, UnitType type, double x, double y, double radius, double dx, double dy, int water,
+         int capacity)
+      : Vehicle(id, type, x, y, radius, dx, dy, 2.5, 0.4), water_(water), capacity_(capacity) {}
+
+  double mass() const override { return Vehicle::mass() + water_ / 2.0; }
+  bool full() const { return water_ == capacity_; }
+
+  void Fill() { water_++; }
 
  private:
   int water_;

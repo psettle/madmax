@@ -23,16 +23,29 @@ class Game {
   void ApplySkills();
   void ApplyTarPool(Skill const& pool);
   void ApplyGrenadeBoost(Skill const& grenade);
+  void ApplyThrust(TotalTurn const& moves);
 
   // Cleanup state after physics
+  void TankerHarvest();
+  void RemoveTankers();
+  void ApplyOilPools();
+  void ApplyOilPool(Skill const& pool);
+  void ReaperHarvest();
+  void RemoveWrecks();
+  void ApplyFriction();
   void RoundUnits();
   void GenerateRage();
   void RemoveTarPools();
+  void RemoveOilPools();
   void DestroySkills();
+
+  // utility
+  void AddVehicle(Vehicle* vehicle);
+  void RemoveVehicle(Vehicle* vehicle);
 
   std::vector<Player> players_;
   std::vector<Tanker> tankers_;
-  std::vector<Unit> wrecks_;
+  std::vector<Wreck> wrecks_;
   std::vector<Skill> skills_;
   std::vector<Vehicle*> vehicles_;
 };

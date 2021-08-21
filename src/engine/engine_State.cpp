@@ -10,7 +10,7 @@ void State::AddVehicle(Vehicle const& vehicle, Player::Id owner) {
   players_[owner].AddVehicle(vehicle);
 }
 
-void State::AddWreck(Unit const& unit) { wrecks_.push_back(unit); }
+void State::AddWreck(Wreck const& unit) { wrecks_.push_back(unit); }
 
 void State::AddSkill(Skill const& skill) { skills_.push_back(skill); }
 
@@ -40,17 +40,25 @@ State::State() {
 
     switch (type) {
       case UnitType::kWreck:
-        AddWreck(Unit(unitId, type, x, y, radius));
+        AddWreck(Wreck(unitId, type, x, y, radius, extra));
         break;
       case UnitType::kOilPool:
       case UnitType::kTarPool:
         AddSkill(Skill(unitId, type, x, y, radius, extra));
         break;
       case UnitType::kTanker:
-        AddTanker(Tanker(unitId, type, x, y, radius, vx, vy, mass, extra, extra2));
+        AddTanker(Tanker(unitId, type, x, y, radius, vx, vy, extra, extra2));
+        break;
+      case UnitType::kReaper:
+        AddVehicle(Vehicle(unitId, type, x, y, radius, vx, vy, 0.5, 0.2), player);
+        break;
+      case UnitType::kDestroyer:
+        AddVehicle(Vehicle(unitId, type, x, y, radius, vx, vy, 1.5, 0.3), player);
+        break;
+      case UnitType::kDoof:
+        AddVehicle(Vehicle(unitId, type, x, y, radius, vx, vy, 1.0, 0.25), player);
         break;
       default:
-        AddVehicle(Vehicle(unitId, type, x, y, radius, vx, vy, mass), player);
         break;
     }
   }
