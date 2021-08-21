@@ -14,11 +14,11 @@ std::string get_reaper_move(GameState const& state) {
   Unit const* closest_wreck = nullptr;
 
   for (auto const& wreck : state.wrecks()) {
-    double distance = Vector::Distance(reaper.position(), wreck->position());
+    double distance = Vector::Distance(reaper.position(), wreck.position());
 
     if (distance < closest_wreck_distance) {
       closest_wreck_distance = distance;
-      closest_wreck = wreck;
+      closest_wreck = &wreck;
     }
   }
 

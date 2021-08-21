@@ -3,6 +3,6 @@
  */
 #pragma once
 
-enum class UnitType { kReaper, kDestroyer, kDoof, kTanker, kWreck, kUnknown };
+enum class UnitType { kReaper, kDestroyer, kDoof, kTanker, kWreck, kTarPool, kOilPool, kUnknown };
 
-UnitType parse_unit_type(int type);
+UnitType ParseUnitType(int type);

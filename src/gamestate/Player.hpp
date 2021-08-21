@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include <memory>
+#include <vector>
 #include "Vehicle.hpp"
 
 class Player {
@@ -18,7 +18,7 @@ class Player {
         destroyer_(nullptr),
         doof_(nullptr) {}
 
-  void AddVehicle(Vehicle const* vehicle);
+  void AddVehicle(Vehicle const& vehicle);
 
   Id id() const { return id_; }
 
@@ -30,7 +30,8 @@ class Player {
   Id const id_;
   int const score_;
   int const rage_;
-  Vehicle const* reaper_;
-  Vehicle const* destroyer_;
-  Vehicle const* doof_;
+  std::vector<Vehicle> vehicles_;
+  Vehicle* reaper_;
+  Vehicle* destroyer_;
+  Vehicle* doof_;
 };

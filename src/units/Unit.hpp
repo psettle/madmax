@@ -10,6 +10,8 @@ class Unit {
  public:
   typedef int Id;
 
+  virtual ~Unit() {}
+
   Unit(Id id, UnitType type, double x, double y, double radius)
       : id_(id), type_(type), position_(x, y), radius_(radius){};
 

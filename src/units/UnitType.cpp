@@ -3,7 +3,7 @@
  */
 #include "UnitType.hpp"
 
-UnitType parse_unit_type(int type) {
+UnitType ParseUnitType(int type) {
   switch (type) {
     case 0:
       return UnitType::kReaper;
@@ -15,6 +15,10 @@ UnitType parse_unit_type(int type) {
       return UnitType::kTanker;
     case 4:
       return UnitType::kWreck;
+    case 5:
+      return UnitType::kTarPool;
+    case 6:
+      return UnitType::kOilPool;
     default:
       return UnitType::kUnknown;
   }

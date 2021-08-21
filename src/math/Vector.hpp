@@ -6,7 +6,8 @@
 
 class Vector {
  public:
-  Vector(double x, double y) : x_(x), y_(y){};
+  Vector(double x, double y) : x_(x), y_(y) {}
+  Vector(Vector const& other) : x_(other.x_), y_(other.y_) {}
 
   double x() const { return x_; }
   double y() const { return y_; }

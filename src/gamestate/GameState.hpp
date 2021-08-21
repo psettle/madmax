@@ -3,25 +3,29 @@
  */
 #pragma once
 
-#include <memory>
 #include <vector>
 #include "Player.hpp"
+#include "Skill.hpp"
+#include "Tanker.hpp"
 #include "Unit.hpp"
 #include "Vehicle.hpp"
 
 class GameState {
  public:
-  void AddPlayer(std::unique_ptr<Player> player);
-  void AddUnit(std::unique_ptr<Vehicle> vehicle, Player::Id owner);
-  void AddUnit(std::unique_ptr<Unit> unit);
+  GameState();  // read gamestate from stdin
 
-  std::vector<Unit const*> const& wrecks() const { return wrecks_; }
+  std::vector<Unit> const& wrecks() const { return wrecks_; }
 
-  Player const& GetPlayer(Player::Id id) const { return *players_[id]; }
+  Player const& GetPlayer(Player::Id id) const { return players_[id]; }
 
  private:
-  std::vector<std::unique_ptr<Unit const>> units_;
-  std::vector<std::unique_ptr<Player>> players_;
-  std::vector<Vehicle const*> tankers_;
-  std::vector<Unit const*> wrecks_;
+  void AddVehicle(Vehicle const& vehicle, Player::Id owner);
+  void AddWreck(Unit const& unit);
+  void AddSkill(Skill const& skill);
+  void AddTanker(Tanker const& tanker);
+
+  std::vector<Player> players_;
+  std::vector<Tanker> tankers_;
+  std::vector<Unit> wrecks_;
+  std::vector<Skill> skills_;
 };

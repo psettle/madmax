@@ -13,12 +13,14 @@ INCLUDE += src/math
 INCLUDE += src/units
 INCLUDE += src/gamestate
 INCLUDE += src/bot
+INCLUDE += src/engine
 
 #source includes
 SOURCES += src/main.cpp
 SOURCES += src/units/UnitType.cpp
 SOURCES += src/gamestate/GameState.cpp
 SOURCES += src/gamestate/Player.cpp
+SOURCES += src/engine/engine_Game.cpp
 
 #final results
 EXECUTABLE=out/madmax.exe
