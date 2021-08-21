@@ -4,6 +4,8 @@
 #pragma once
 #include <math.h>
 
+static double constexpr kEpsilon = 0.00001;
+
 class Vector {
  public:
   Vector(double x, double y) : x_(x), y_(y) {}
@@ -13,9 +15,8 @@ class Vector {
   double y() const { return y_; }
 
   static double Distance(Vector const& a, Vector const& b) {
-    double dx = a.x_ - b.x_;
-    double dy = a.y_ - b.y_;
-    return std::sqrt(dx * dx + dy * dy);
+    Vector delta = a - b;
+    return std::sqrt(delta * delta);
   }
 
   static void Round(double& x) {
@@ -28,11 +29,16 @@ class Vector {
     Round(y_);
   }
 
-  Vector const& operator*=(double scalar) {
-    x_ *= scalar;
-    y_ *= scalar;
-    return *this;
-  }
+  Vector operator+(Vector const& other) const { return Vector(x_ + other.x(), y_ - other.y()); }
+  Vector const& operator+=(Vector const& other) { return *this = *this + other; }
+
+  Vector operator-(Vector const& other) const { return Vector(x_ - other.x(), y_ - other.y()); }
+  Vector const& operator-=(Vector const& other) { return *this = *this - other; }
+
+  Vector operator*(double scalar) const { return Vector(x_ * scalar, y_ * scalar); }
+  Vector const& operator*=(double scalar) { return *this = *this * scalar; }
+
+  double operator*(Vector const& other) const { return x_ * other.x() + y_ * other.y(); }
 
  private:
   double x_;

@@ -23,6 +23,20 @@ class Unit {
 
   virtual void RoundOff() { position_.Round(); }
 
+  void Move(Vector const& delta) { position_ += delta; }
+
+  void Move(Vector const& target, double distance) {
+    double d = Vector::Distance(position(), target);
+
+    if (d < kEpsilon) {
+      return;
+    }
+
+    Vector delta = target - position();
+    double coef = distance / d;
+    Move(delta * coef);
+  }
+
  private:
   Id id_;
   UnitType type_;

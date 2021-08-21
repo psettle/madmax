@@ -4,6 +4,7 @@
 #pragma once
 
 #include <vector>
+#include "engine_Collision.hpp"
 #include "engine_Move.hpp"
 #include "engine_State.hpp"
 
@@ -24,6 +25,15 @@ class Game {
   void ApplyTarPool(Skill const& pool);
   void ApplyGrenadeBoost(Skill const& grenade);
   void ApplyThrust(TotalTurn const& moves);
+
+  // physics
+  void RunCollisions();
+  void RunTime(double t);
+  void RunCollision(Collision const& collision);
+  void WreckTanker(Tanker* tanker);
+  bool GetNextCollision(Collision& collision_out, double t_limit);
+  bool GetNextBorderCollision(Collision& collision_out, Vehicle& vehicle);
+  bool GetNextVehicleCollision(Collision& collision_out, Vehicle& a, Vehicle& b);
 
   // Cleanup state after physics
   void TankerHarvest();

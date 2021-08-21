@@ -13,8 +13,9 @@ class Tanker : public Vehicle {
          int capacity)
       : Vehicle(id, type, x, y, radius, dx, dy, 2.5, 0.4), water_(water), capacity_(capacity) {}
 
-  double mass() const override { return Vehicle::mass() + water_ / 2.0; }
-  bool full() const { return water_ == capacity_; }
+  double mass() const override { return Vehicle::mass() + water() / 2.0; }
+  bool full() const { return water() == capacity_; }
+  int water() const { return water_; }
 
   void Fill() { water_++; }
 

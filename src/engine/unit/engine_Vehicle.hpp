@@ -13,21 +13,26 @@ class Vehicle : public Unit {
           double mass, double friction)
       : Unit(id, type, x, y, radius),
         velocity_(dx, dy),
-        mass_(mass),
+        base_mass_(mass),
         oil_(false),
         friction_(friction) {}
 
-  double speed() const { return Vector::Distance(Vector(0, 0), position()); }
+  double speed() const { return std::sqrt(speed2()); }
+  double speed2() const { return velocity() * velocity(); }
   bool oil() const { return oil_; }
+  Vector const& velocity() const { return velocity_; }
 
-  void AddMass(double mass) { mass_ += mass; }
+  void AddMass(double mass) { base_mass_ += mass; }
   void UnwindMass(double mass) {
-    while (mass_ > mass) {
-      mass_ -= mass;
+    while (base_mass_ > mass) {
+      base_mass_ -= mass;
     }
   }
 
-  void Thrust(Vector const& direction, double power);
+  void Thrust(Vector const& target, double power);
+  void RunTime(double t);
+  static void Bounce(Vehicle& a, Vehicle& b);
+  static void Bounce(Vehicle& v, Vector const& centre, double radius);
 
   void RoundOff() override {
     Unit::RoundOff();
@@ -44,11 +49,11 @@ class Vehicle : public Unit {
     velocity_ *= (1.0 - friction_);
   }
 
-  virtual double mass() const { return mass_; }
+  virtual double mass() const { return base_mass_; }
 
  private:
   Vector velocity_;
-  double mass_;
+  double base_mass_;
   bool oil_;
   double friction_;
 };

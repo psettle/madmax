@@ -3,11 +3,13 @@
  */
 #include "engine_Game.hpp"
 #include <algorithm>
+#include "engine_Collision.hpp"
 
 namespace engine {
 
 static Vector const kWaterTown = Vector(0.0, 0.0);
 static double constexpr kTankerFillRadius = 3000;
+static double constexpr kMapRadius = 6000;
 
 Game::Game(State const& initial_state)
     : players_(initial_state.players()),
@@ -35,9 +37,7 @@ void Game::RunTurn(TotalTurn const& moves) {
   CreateSkills(moves);
   ApplySkills();
   ApplyThrust(moves);
-
-  // Movement + collisions
-
+  RunCollisions();
   TankerHarvest();
   RemoveTankers();
 
@@ -161,6 +161,149 @@ void Game::ApplyThrust(TotalTurn const& moves) {
       tanker.Thrust(kWaterTown, kTankerThrust);
     }
   }
+}
+
+void Game::RunCollisions() {
+  double t = 0;
+  Collision collision;
+
+  while (GetNextCollision(collision, 1 - t)) {
+    RunTime(collision.t());
+    RunCollision(collision);
+    t += collision.t();
+  }
+
+  RunTime(1 - t);
+}
+
+void Game::RunTime(double t) {
+  for (Vehicle* vehicle : vehicles_) {
+    vehicle->RunTime(t);
+  }
+}
+
+void Game::RunCollision(Collision const& collision) {
+  if (collision.a() && collision.b()) {
+    if (collision.a()->type() == UnitType::kTanker &&
+        collision.b()->type() == UnitType::kDestroyer) {
+      WreckTanker(reinterpret_cast<Tanker*>(collision.a()));
+    } else if (collision.a()->type() == UnitType::kDestroyer &&
+               collision.b()->type() == UnitType::kTanker) {
+      WreckTanker(reinterpret_cast<Tanker*>(collision.b()));
+    } else {
+      Vehicle::Bounce(*collision.a(), *collision.b());
+    }
+  } else if (collision.a()) {
+    Vehicle::Bounce(*collision.a(), kWaterTown, kMapRadius);
+  } else {
+    Vehicle::Bounce(*collision.b(), kWaterTown, kMapRadius);
+  }
+}
+
+void Game::WreckTanker(Tanker* tanker) {
+  wrecks_.push_back(Wreck(-1, UnitType::kWreck, tanker->position().x(), tanker->position().y(),
+                          tanker->radius(), tanker->water()));
+  RemoveVehicle(tanker);
+  tankers_.erase(std::remove_if(tankers_.begin(), tankers_.end(),
+                                [tanker](Tanker const& t) { return &t == tanker; }));
+}
+
+bool Game::GetNextCollision(Collision& collision_out, double t_limit) {
+  Collision test_collision;
+  Collision closest_collision = Collision(nullptr, nullptr, 1000);
+
+  for (auto i = vehicles_.begin(); i != vehicles_.end(); ++i) {
+    if (GetNextBorderCollision(test_collision, **i)) {
+      if (test_collision.t() <= t_limit && test_collision.t() <= closest_collision.t()) {
+        closest_collision = test_collision;
+      }
+    }
+
+    for (auto j = i + 1; j != vehicles_.end(); ++j) {
+      if (GetNextVehicleCollision(test_collision, **i, **j)) {
+        if (test_collision.t() <= t_limit && test_collision.t() <= closest_collision.t()) {
+          closest_collision = test_collision;
+        }
+      }
+    }
+  }
+
+  if (closest_collision.t() <= t_limit) {
+    collision_out = closest_collision;
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool Game::GetNextBorderCollision(Collision& collision_out, Vehicle& vehicle) {
+  if (Vector::Distance(vehicle.position(), kWaterTown) + vehicle.radius() >= kMapRadius) {
+    collision_out = Collision(&vehicle, nullptr, 0.0);
+    return true;
+  }
+
+  // Should probably be <= epsilon but, just this is referee behavior
+  if (vehicle.speed2() == 0) {
+    return false;
+  }
+
+  double a = vehicle.velocity() * vehicle.velocity();
+  if (a <= 0) {
+    return false;
+  }
+
+  double b = 2 * (vehicle.position() * vehicle.velocity());
+  double c = vehicle.position() * vehicle.position() -
+             (kMapRadius - vehicle.radius()) * (kMapRadius - vehicle.radius());
+  double delta = b * b - 4 * a * c;
+
+  if (delta <= 0) {
+    return false;
+  }
+
+  double t = (-b + std::sqrt(delta)) / (2 * a);
+  if (t <= 0) {
+    return false;
+  }
+
+  collision_out = Collision(&vehicle, nullptr, t);
+  return true;
+}
+
+bool Game::GetNextVehicleCollision(Collision& collision_out, Vehicle& v1, Vehicle& v2) {
+  double r = v1.radius() + v2.radius();
+
+  if (Vector::Distance(v1.position(), v2.position()) <= r) {
+    collision_out = Collision(&v1, &v2, 0.0);
+    return true;
+  }
+
+  if (v2.speed2() == 0.0 && v1.speed2() == 0.0) {
+    return false;
+  }
+
+  Vector dpos = v1.position() - v2.position();
+  Vector dvel = v1.velocity() - v2.velocity();
+
+  double a = dvel * dvel;
+  if (a <= 0) {
+    return false;
+  }
+
+  double b = 2 * (dpos * dvel);
+  double c = dpos * dpos - r * r;
+  double delta = b * b - 4 * a * c;
+  if (delta <= 0.0) {
+    return false;
+  }
+
+  double t = (-b + std::sqrt(delta)) / (2 * a);
+  if (t <= 0) {
+    return false;
+  }
+
+  collision_out = Collision(&v1, &v2, t);
+  return true;
 }
 
 void Game::TankerHarvest() {
