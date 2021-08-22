@@ -2,17 +2,17 @@
 // optimize pragmas first
 
 #include <iostream>
-#include "Reaper.hpp"
-#include "engine_Game.hpp"
-#include "engine_State.hpp"
+#include "monte_Optimize.hpp"
 
 int main() {
   // game loop
   while (1) {
-    engine::State state;
+    engine::Move reaper, destroyer, doof;
 
-    std::cout << get_reaper_move(state) << std::endl;
-    std::cout << "WAIT" << std::endl;
-    std::cout << "WAIT" << std::endl;
+    monte::Optimize(reaper, destroyer, doof);
+
+    std::cout << reaper.ToString() << std::endl;
+    std::cout << destroyer.ToString() << std::endl;
+    std::cout << doof.ToString() << std::endl;
   }
 }

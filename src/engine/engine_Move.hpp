@@ -3,6 +3,7 @@
  */
 #pragma once
 
+#include <string>
 #include <vector>
 #include "Vector.hpp"
 
@@ -20,6 +21,19 @@ class Move {
   Vector const& target() const { return target_; }
   int power() const { return power_; }
 
+  std::string ToString() const {
+    switch (type_) {
+      case Type::kWait:
+        return "WAIT";
+      case Type::kMove:
+        return std::to_string(target_.x()) + " " + std::to_string(target_.y()) + " " +
+               std::to_string(power_);
+      case Type::kSkill:
+        return "SKILL " + std::to_string(target_.x()) + " " + std::to_string(target_.y());
+    }
+    return "";
+  }
+
  private:
   Move(Type type, Vector const& target = Vector(0, 0), int power = 0)
       : type_(type), target_(target), power_(power) {}
@@ -29,16 +43,32 @@ class Move {
   int power_;
 };
 
+typedef std::vector<Move> Sequence;
+
+struct PlayerSequence {
+  Sequence reaper;
+  Sequence destroyer;
+  Sequence doof;
+};
+
 struct PlayerTurn {
-  Move reaper;
-  Move destroyer;
-  Move doof;
+  PlayerTurn(Move const& reaper, Move const& destroyer, Move const& doof)
+      : reaper(reaper), destroyer(destroyer), doof(doof) {}
+
+  Move const& reaper;
+  Move const& destroyer;
+  Move const& doof;
+};
+
+struct TotalSequence {
+  PlayerSequence player[3];
 };
 
 struct TotalTurn {
+  TotalTurn(PlayerTurn const& p0, PlayerTurn const& p1, PlayerTurn const& p2)
+      : player({p0, p1, p2}) {}
+
   PlayerTurn player[3];
 };
-
-typedef std::vector<TotalTurn> Moves;
 
 }  // namespace engine

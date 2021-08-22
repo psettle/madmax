@@ -1,5 +1,5 @@
 #config
-DEBUG=1
+DEBUG=0
 
 #setup
 SOURCES=
@@ -10,7 +10,7 @@ INCLUDE=
 INCLUDE += src
 INCLUDE += src/util
 INCLUDE += src/math
-INCLUDE += src/bot
+INCLUDE += src/monte
 INCLUDE += src/engine
 INCLUDE += src/engine/unit
 
@@ -22,11 +22,14 @@ SOURCES += src/engine/engine_Player.cpp
 SOURCES += src/engine/engine_Game.cpp
 SOURCES += src/engine/unit/engine_UnitType.cpp
 SOURCES += src/engine/unit/engine_Vehicle.cpp
+SOURCES += src/monte/monte_Evaluate.cpp
+SOURCES += src/monte/monte_Optimize.cpp
+SOURCES += src/monte/monte_Generator.cpp
 
 #final results
 EXECUTABLE=out/madmax.exe
 BUNDLE=out/madmax.cpp
-MINI_BUNDLE=out/minimadmax.cpp
+MINI_BUNDLE=out/minimadmax.txt
 EXE_BUNDLE=out/minimadmax.exe
 
 
@@ -76,7 +79,7 @@ $(MINI_BUNDLE): $(BUNDLE)
 	@echo $@
 
 $(EXE_BUNDLE) : $(MINI_BUNDLE)
-	@$(CC) $(LDFLAGS) $(MINI_BUNDLE) -o $@
+	@$(CC) $(LDFLAGS) -x c++ $(MINI_BUNDLE) -o $@
 	@echo $@
 
 .PHONY: clean

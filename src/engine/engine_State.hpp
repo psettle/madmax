@@ -17,6 +17,10 @@ class State {
  public:
   State();  // read gamestate from stdin
 
+  State(std::vector<Player> const& players, std::vector<Tanker> const& tankers,
+        std::vector<Wreck> const& wrecks, std::vector<Skill> const& skills)
+      : players_(players), tankers_(tankers), wrecks_(wrecks), skills_(skills) {}
+
   std::vector<Wreck> const& wrecks() const { return wrecks_; }
   std::vector<Player> const& players() const { return players_; }
   std::vector<Tanker> const& tankers() const { return tankers_; }

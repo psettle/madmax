@@ -27,11 +27,22 @@ Game::Game(State const& initial_state)
   }
 }
 
-void Game::RunGame(Moves const& moves) {
-  for (auto const& move : moves) {
-    RunTurn(move);
+void Game::RunGame(TotalSequence const& all_moves) {
+  size_t turn = all_moves.player[0].reaper.size();
+
+  for (size_t i = 0; i < turn; ++i) {
+    TotalTurn moves(PlayerTurn(all_moves.player[0].reaper[i], all_moves.player[0].destroyer[i],
+                               all_moves.player[0].doof[i]),
+                    PlayerTurn(all_moves.player[1].reaper[i], all_moves.player[1].destroyer[i],
+                               all_moves.player[1].doof[i]),
+                    PlayerTurn(all_moves.player[2].reaper[i], all_moves.player[2].destroyer[i],
+                               all_moves.player[2].doof[i]));
+
+    RunTurn(moves);
   }
 }
+
+State Game::GetState() const { return State(players_, tankers_, wrecks_, skills_); }
 
 void Game::RunTurn(TotalTurn const& moves) {
   CreateSkills(moves);

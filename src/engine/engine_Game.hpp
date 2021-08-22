@@ -14,7 +14,9 @@ class Game {
  public:
   Game(State const& initial_state);
 
-  void RunGame(Moves const& moves);
+  void RunGame(TotalSequence const& all_moves);
+
+  State GetState() const;
 
  private:
   void RunTurn(TotalTurn const& moves);

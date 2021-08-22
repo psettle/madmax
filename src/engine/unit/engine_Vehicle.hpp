@@ -17,6 +17,8 @@ class Vehicle : public Unit {
         oil_(false),
         friction_(friction) {}
 
+  Vehicle() : Unit(-1, UnitType::kUnknown, 0, 0, 0), velocity_(0, 0) {}
+
   double speed() const { return std::sqrt(speed2()); }
   double speed2() const { return velocity() * velocity(); }
   bool oil() const { return oil_; }
